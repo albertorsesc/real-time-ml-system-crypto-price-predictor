@@ -10,6 +10,20 @@ quixstreams = ">=3.5.0,<4.0.0"
 websocket-client = ">=1.8.0,<2.0.0"
 loguru = ">=0.7.3,<0.8.0"
 
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.9.1"
+
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+docstring-code-format = true
+
+[tool.ruff.lint]
+extend-select = ["I"]
