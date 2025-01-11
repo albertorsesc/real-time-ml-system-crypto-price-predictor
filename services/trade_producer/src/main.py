@@ -1,7 +1,8 @@
 from typing import Dict, List
 from quixstreams import Application
 
-from src.kraken_api import KrakenWebsocketTradeAPI
+from kraken_api import KrakenWebsocketTradeAPI
+from loguru import logger
 
 def produce_trades(
   kafka_broker_address: str,
@@ -49,7 +50,7 @@ def produce_trades(
             key = message.key
         )
 
-        print('Message Sent!')
+        logger.info('Message Sent!')
 
       from time import sleep
       sleep(1)

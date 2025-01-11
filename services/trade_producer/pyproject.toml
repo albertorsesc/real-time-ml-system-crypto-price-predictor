@@ -1,17 +1,14 @@
-[project]
+[tool.poetry]
 name = "src"
 version = "0.1.0"
 description = ""
-authors = [
-    {name = "Alberto Rosas",email = "alberto.rsesc@protonmail.com"}
-]
-readme = "README.md"
-requires-python = ">=3.10,<4"
-dependencies = [
-    "quixstreams (>=3.5.0,<4.0.0)",
-    "websocket-client (>=1.8.0,<2.0.0)"
-]
+authors = ["Alberto Rosas <alberto.rsesc@protonmail.com>"]
 
+[tool.poetry.dependencies]
+python = ">=3.10,<4"
+quixstreams = ">=3.5.0,<4.0.0"
+websocket-client = ">=1.8.0,<2.0.0"
+loguru = ">=0.7.3,<0.8.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

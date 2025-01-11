@@ -1,6 +1,7 @@
 import json
 from typing import List, Dict
 from websocket import create_connection
+from loguru import logger
 
 class KrakenWebsocketTradeAPI:
   URL = 'wss://ws.kraken.com/v2'
@@ -9,7 +10,7 @@ class KrakenWebsocketTradeAPI:
     self.product_id = product_id
 
     self._ws = create_connection(self.URL)
-    print("Connection Established")
+    logger.info("Connection Established")
 
     # Subscribe to the trades for the given `product_id`
     self._subscribe(product_id)
@@ -19,7 +20,7 @@ class KrakenWebsocketTradeAPI:
       Establish connection to the Kraken websocket API and subscribe to the trades for the given `product_id`
       """
 
-      print(f"Subscribing to trades for {product_id}")
+      logger.info(f"Subscribing to trades for {product_id}")
       # Subscribe to the trades for the given `product_id`
       message = {
         "method": "subscribe",
@@ -34,7 +35,7 @@ class KrakenWebsocketTradeAPI:
 
       self._ws.send(json.dumps(message))
 
-      print("Subscription worked!")
+      logger.info("Subscription worked!")
 
       # Discarding the first 2 messages we got from the websocket, because
       # they contain no trade data, only confirmation from Kraken that the subscription was successful.
@@ -65,7 +66,7 @@ class KrakenWebsocketTradeAPI:
 
     # parse message string as a dictionary
     message = json.loads(message)
-    print('Message received: ', message)
+    logger.info('Message received: ', message)
 
     trades = []
     for trade in message['data']:
