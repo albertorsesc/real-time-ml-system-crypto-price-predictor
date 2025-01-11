@@ -27,7 +27,7 @@ def produce_trades(
   )
 
   # Create instance of the Kraken API
-  kraken_api = KrakenWebsocketTradeAPI()
+  kraken_api = KrakenWebsocketTradeAPI(product_id = 'BTC/USD')
 
   # Create a Producer instance
   with app.get_producer() as producer:

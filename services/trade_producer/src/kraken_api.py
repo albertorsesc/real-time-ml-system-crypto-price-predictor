@@ -1,23 +1,79 @@
+import json
 from typing import List, Dict
+from websocket import create_connection
 
 class KrakenWebsocketTradeAPI:
-  def __init__(self):
-    pass
+  URL = 'wss://ws.kraken.com/v2'
+
+  def __init__(self, product_id: str):
+    self.product_id = product_id
+
+    self._ws = create_connection(self.URL)
+    print("Connection Established")
+
+    # Subscribe to the trades for the given `product_id`
+    self._subscribe(product_id)
+
+  def _subscribe(self, product_id: str):
+      """
+      Establish connection to the Kraken websocket API and subscribe to the trades for the given `product_id`
+      """
+
+      print(f"Subscribing to trades for {product_id}")
+      # Subscribe to the trades for the given `product_id`
+      message = {
+        "method": "subscribe",
+        "params": {
+          "channel": "trade",
+          "symbol": [
+            product_id,
+          ],
+          "snapshot": False
+        }
+      }
+
+      self._ws.send(json.dumps(message))
+
+      print("Subscription worked!")
+
+      # Discarding the first 2 messages we got from the websocket, because
+      # they contain no trade data, only confirmation from Kraken that the subscription was successful.
+      _ = self._ws.recv()
+      _ = self._ws.recv()
 
   def get_trades(self) -> List[Dict]:
-    mock_trades = [
-      {
-        'product_id': 'BTC-USD',
-        'price': 60000,
-        'volume': 0.01,
-        'timestamp': 1630000000
-      },
-      {
-        'product_id': 'BTC-USD',
-        'price': 59000,
-        'volume': 0.01,
-        'timestamp': 1640000000
-      },
-    ]
+    # mock_trades = [
+    #   {
+    #     'product_id': 'BTC-USD',
+    #     'price': 60000,
+    #     'volume': 0.01,
+    #     'timestamp': 1630000000
+    #   },
+    #   {
+    #     'product_id': 'BTC-USD',
+    #     'price': 59000,
+    #     'volume': 0.01,
+    #     'timestamp': 1640000000
+    #   },
+    # ]
 
-    return mock_trades
+    message = self._ws.recv()
+
+    if 'heartbeat' in message:
+      # when we get a heartbeat, i return empty list.
+      return []
+
+    # parse message string as a dictionary
+    message = json.loads(message)
+    print('Message received: ', message)
+
+    trades = []
+    for trade in message['data']:
+      trades.append({
+        'product_id': self.product_id,
+        'price': trade['price'],
+        'volume': trade['qty'],
+        'timestamp': trade['timestamp'],
+      })
+
+    return trades
