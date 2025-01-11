@@ -6,6 +6,9 @@ ENV PYTHONUNBUFFERED=1
 # Install Poetry
 RUN pip install poetry==2.0.0
 
+# Add src to the PYTHONPATH
+ENV PYTHONPATH=/app
+
 WORKDIR /app
 
 # copy the pyproject.toml and poetry.lock files into the container

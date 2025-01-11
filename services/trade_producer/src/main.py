@@ -5,10 +5,12 @@ from quixstreams import Application
 
 from kraken_api import KrakenWebsocketTradeAPI
 
+from src import config
 
 def produce_trades(
     kafka_broker_address: str,
     kafka_topic_name: str,
+    product_id: str,
 ) -> None:
     """
     Reads trades from the Kraken websocket API and saves them into a Kafka Topic.
@@ -16,7 +18,7 @@ def produce_trades(
     Args:
       kafka_broker_address (str): The address of the Kafka broker.
       kafka_topic_name (str): The name of the Kafka Topic.
-
+      product_id (str): The product ID to subscribe to.
     Returns:
       None
     """
@@ -27,7 +29,7 @@ def produce_trades(
     topic = app.topic(name=kafka_topic_name, value_serializer='json')
 
     # Create instance of the Kraken API
-    kraken_api = KrakenWebsocketTradeAPI(product_id='BTC/USD')
+    kraken_api = KrakenWebsocketTradeAPI(product_id=product_id)
 
     # Create a Producer instance
     with app.get_producer() as producer:
@@ -50,4 +52,8 @@ def produce_trades(
 
 
 if __name__ == '__main__':
-    produce_trades(kafka_broker_address='redpanda-0:9092', kafka_topic_name='trade')
+    produce_trades(
+        kafka_broker_address=config.kafka_broker_address,
+        kafka_topic_name=config.kafka_topic_name,
+        product_id=config.product_id
+    )

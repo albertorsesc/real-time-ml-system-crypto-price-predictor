@@ -1,8 +1,8 @@
 build:
-	docker build -t trade_producer .
+	docker build -t trade-producer .
 
 run: build
-	docker run -it --network=redpanda_network trade_producer
+	docker run -it --network=redpanda_network trade-producer
 
 lint:
 	ruff check --fix
